@@ -1,6 +1,0 @@
-{
-  "trailingSlash": true,
-  "redirects": [
-    { "source": "/", "destination": "/v3/", "permanent": false }
-  ]
-}
