@@ -6,10 +6,18 @@
 <title>陕北矿业职称评定智能助手</title>
 <meta name="description" content="基于AI大模型的职称评定智能辅助系统，为员工提供智能化填写引导，为HR提供自动化材料核验">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f172a'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='%23d69e2e' font-weight='bold' font-family='sans-serif'>陕</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* 本地字体（已从 CDN 迁移为本地文件，避免演示现场网络不稳定导致字体/图表加载失败） */
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('./assets/fonts/inter-300.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('./assets/fonts/inter-400.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('./assets/fonts/inter-500.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('./assets/fonts/inter-600.woff2') format('woff2'); }
+  @font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap; src: url('./assets/fonts/inter-700.woff2') format('woff2'); }
+  @font-face { font-family: 'Noto Sans SC'; font-style: normal; font-weight: 300; font-display: swap; src: url('./assets/fonts/noto-sans-sc-300.woff2') format('woff2'); }
+  @font-face { font-family: 'Noto Sans SC'; font-style: normal; font-weight: 400; font-display: swap; src: url('./assets/fonts/noto-sans-sc-400.woff2') format('woff2'); }
+  @font-face { font-family: 'Noto Sans SC'; font-style: normal; font-weight: 500; font-display: swap; src: url('./assets/fonts/noto-sans-sc-500.woff2') format('woff2'); }
+  @font-face { font-family: 'Noto Sans SC'; font-style: normal; font-weight: 600; font-display: swap; src: url('./assets/fonts/noto-sans-sc-600.woff2') format('woff2'); }
+  @font-face { font-family: 'Noto Sans SC'; font-style: normal; font-weight: 700; font-display: swap; src: url('./assets/fonts/noto-sans-sc-700.woff2') format('woff2'); }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
     --navy-900: #0a1628;
@@ -1441,7 +1449,7 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<script src="./assets/js/echarts.min.js"></script>
 <script>
 // ==================== Data ====================
 const fields = [
