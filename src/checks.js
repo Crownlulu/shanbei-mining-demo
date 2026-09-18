@@ -102,14 +102,17 @@ export function runChecks(form) {
     })
   }
 
-  form.awards.forEach((a) => {
+  form.awards.forEach((a, idx) => {
+    const blank = !a.name && !a.grade && !a.year && !a.rank
+    if (blank) return
     if (!a.rank) {
+      const label = a.name ? `“${a.name}”` : `获奖情况第 ${idx + 1} 行`
       issues.push({
         id: `award-${a.key}`,
         level: 'warning',
         section: 'awards',
         field: `awards.${a.key}.rank`,
-        text: `“${a.name}”未填写本人排名，评审时可能无法计分。`,
+        text: `${label}未填写本人排名，评审时可能无法计分。`,
         basis: '示例：科技奖项以证书所列完成人排名为准',
       })
     }

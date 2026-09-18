@@ -12,6 +12,27 @@ import { applicant, sections, guides, tips, fieldHelp, breakRules, VERIFY_TEXT }
 import { sectionStatus, yearsSince } from '../checks.js'
 import { STATUS } from '../status.js'
 
+const PERIOD_FMT = 'YYYY-MM'
+
+function parsePeriod(v) {
+  const toDay = (x) => {
+    const m = /^(\d{4})-(\d{1,2})$/.exec((x || '').trim())
+    if (!m) return null
+    const d = dayjs(`${m[1]}-${m[2].padStart(2, '0')}-01`)
+    return d.isValid() ? d : null
+  }
+  if (!v) return null
+  const parts = String(v).split('至')
+  return [toDay(parts[0]), toDay(parts[1])]
+}
+
+function formatPeriod(d) {
+  if (!d) return ''
+  const [a, b] = d
+  if (!a && !b) return ''
+  return `${a ? a.format(PERIOD_FMT) : ''} 至 ${b ? b.format(PERIOD_FMT) : ''}`.trim()
+}
+
 const { Text, Paragraph } = Typography
 
 const UPLOAD_NAMES = { f3: '聘任文件_王建军.pdf', f5: '业绩证明材料_已盖章.pdf' }
@@ -501,17 +522,20 @@ export default function ApplyForm({ form, setForm, issues, go, focusSection, app
                   ),
                 },
                 {
-                  title: '本人角色', dataIndex: 'role', width: 130,
+                  title: '本人角色', dataIndex: 'role', width: 116,
                   render: (v, r) => (
                     <Input placeholder="如：负责人" value={v}
                       onChange={(e) => updateRow('projects', r.key, 'role', e.target.value)} />
                   ),
                 },
                 {
-                  title: '起止时间', dataIndex: 'period', width: 190,
+                  title: '起止时间', dataIndex: 'period', width: 204,
                   render: (v, r) => (
-                    <Input placeholder="如：2022-03 至 2023-06" value={v}
-                      onChange={(e) => updateRow('projects', r.key, 'period', e.target.value)} />
+                    <DatePicker.RangePicker picker="month" size="small" suffixIcon={null}
+                      style={{ width: '100%' }} separator="—"
+                      allowEmpty={[true, true]} placeholder={['开始年月', '结束年月']}
+                      value={parsePeriod(v)}
+                      onChange={(d) => updateRow('projects', r.key, 'period', formatPeriod(d))} />
                   ),
                 },
                 ...(readOnly ? [] : [deleteCol('projects', '项目')]),

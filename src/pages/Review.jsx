@@ -92,7 +92,7 @@ export default function Review({ form, issues, go, app, onSubmit }) {
           <Descriptions.Item label="最高学历">{form.education.degree} · {form.education.school} · {form.education.major}</Descriptions.Item>
           <Descriptions.Item label="现任职称">{form.title.name}，{form.title.obtained} 取得，任职 {yearsSince(form.title.obtained)} 年</Descriptions.Item>
           <Descriptions.Item label="职业资格">{form.certs.map((c) => c.name).join('；')}</Descriptions.Item>
-          <Descriptions.Item label="获奖">{form.awards.map((a) => `${a.name}${a.grade}（${a.rank || '未填排名'}）`).join('；')}</Descriptions.Item>
+          <Descriptions.Item label="获奖">{form.awards.filter((a) => a.name || a.grade || a.rank).map((a) => `${a.name || '（未填名称）'}${a.grade}（${a.rank || '未填排名'}）`).join('；') || '无'}</Descriptions.Item>
           <Descriptions.Item label="继续教育">{form.training.map((t) => `${t.year}年 ${t.hours}学时`).join('，')}</Descriptions.Item>
           <Descriptions.Item label="附件">{uploaded} / {form.attachments.length} 份已上传</Descriptions.Item>
           <Descriptions.Item label="工作业绩" span={2}>{form.achievement}</Descriptions.Item>
