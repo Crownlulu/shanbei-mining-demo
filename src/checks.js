@@ -51,13 +51,14 @@ export function runChecks(form) {
   }
 
   form.certs.forEach((c, i) => {
-    if (!/^[A-Za-z0-9]{10,18}$/.test(c.no.trim())) {
+    const no = (c.no || '').trim()
+    if (!/^[A-Za-z0-9]{10,18}$/.test(no)) {
       issues.push({
         id: `cert-${c.key}`,
         level: 'error',
         section: 'certs',
         field: `certs.${i}.no`,
-        text: `“${c.name}”的证书编号为 ${c.no.length} 位，应为 10–18 位字母或数字，请对照证书原件核实。`,
+        text: `“${c.name || '新增证书'}”的证书编号为 ${no.length} 位，应为 10–18 位字母或数字，请对照证书原件核实。`,
         basis: '示例：证书编号应为 10–18 位字母或数字',
       })
     }

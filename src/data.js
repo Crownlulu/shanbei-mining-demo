@@ -39,6 +39,16 @@ export const initialForm = {
     graduate: '2012-07',
     certNo: '107041201205002316',
     verified: true,
+    verify: {
+      channel: '学信网',
+      time: '2026-09-15 10:22',
+      status: 'verified',
+      items: [
+        { label: '姓名', result: '一致' },
+        { label: '证书编号', result: '一致' },
+        { label: '毕业时间', result: '一致' },
+      ],
+    },
   },
   title: {
     name: '工程师',
@@ -48,8 +58,31 @@ export const initialForm = {
     hired: '2019-09-01',
   },
   certs: [
-    { key: 'c1', name: '注册安全工程师（煤矿安全）', no: 'ZA20210310475', issuer: '应急管理部', date: '2021-03-10', status: 'verified' },
-    { key: 'c2', name: '一级建造师（矿业工程）', no: '0612345', issuer: '住房和城乡建设部', date: '2022-11-18', status: 'pending' },
+    {
+      key: 'c1', name: '注册安全工程师（煤矿安全）', no: 'ZA20210310475', issuer: '应急管理部', date: '2021-03-10',
+      status: 'verified',
+      verify: {
+        channel: '应急管理部职业资格证书查询',
+        time: '2026-09-15 10:23',
+        status: 'verified',
+        items: [
+          { label: '姓名', result: '一致' },
+          { label: '证书编号', result: '一致' },
+          { label: '发证日期', result: '一致' },
+        ],
+      },
+    },
+    {
+      key: 'c2', name: '一级建造师（矿业工程）', no: '0612345', issuer: '住房和城乡建设部', date: '2022-11-18',
+      status: 'manual',
+      verify: {
+        channel: '中国人事考试网',
+        time: '',
+        status: 'manual',
+        note: '该证书暂不支持联网核验，需人工核对原件',
+        items: [],
+      },
+    },
   ],
   achievement:
     '2021年至今负责3号井综采工作面的采掘技术管理，主持编制工作面作业规程，组织开展顶板管理和巷道支护优化，工作面安全生产情况良好，得到单位领导认可。',
@@ -214,4 +247,39 @@ export const history = {
     { node: '单位审核', person: '人力资源部 李老师', result: '同意', comment: '材料齐全', time: '2019-04-15 14:02' },
     { node: '评委会评审', person: '工程系列中级评委会', result: '同意', comment: '', time: '2019-06-20 10:00' },
   ],
+}
+
+
+// 核验结果文字（演示环境为示例数据，正式环境对接官方查询渠道）
+export const VERIFY_TEXT = {
+  verified: '核验通过',
+  manual: '需人工核对原件',
+  none: '待人工核对',
+}
+
+// 汇总学历和职业资格的核验情况，供提交前检查页展示
+export function verifyRows(form) {
+  const rows = []
+  const ev = form.education.verify
+  rows.push({
+    key: 'edu',
+    material: `学历证书（${form.education.degree}）`,
+    channel: ev?.channel || '—',
+    time: ev?.time || '—',
+    status: ev?.status || 'none',
+    note: ev?.note || '',
+    items: ev?.items || [],
+  })
+  form.certs.forEach((c) => {
+    rows.push({
+      key: c.key,
+      material: c.name || '（未填写证书名称）',
+      channel: c.verify?.channel || '—',
+      time: c.verify?.time || '—',
+      status: c.verify?.status || (c.status === 'verified' ? 'verified' : 'none'),
+      note: c.verify?.note || '',
+      items: c.verify?.items || [],
+    })
+  })
+  return rows
 }

@@ -8,6 +8,14 @@ body { background: #f3f5f8; }
 .app-sider { border-right: 1px solid #e6e9ef; }
 .page { padding: 16px 24px 48px; max-width: 1360px; }
 .page-title-row { display: flex; align-items: center; justify-content: space-between; margin: 8px 0 16px; }
+/* 申报表页：操作栏吸顶，滚动到表单下方时仍可点击“保存草稿 / 提交前检查” */
+.page-title-row.is-sticky {
+  position: sticky; top: 56px; z-index: 9;
+  background: #f3f5f8; border-bottom: 1px solid #e6e9ef;
+  margin: 0 -24px 16px; padding: 8px 24px 10px;
+}
+/* 字数统计与校验提示分行显示，避免重叠 */
+.count-field .ant-form-item-explain { margin-top: 20px; }
 .page-title { font-size: 20px; font-weight: 600; margin: 0; color: #1f2329; }
 .muted { color: #8a919f; }
 .form-shell { display: grid; grid-template-columns: 188px minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
@@ -38,3 +46,9 @@ body { background: #f3f5f8; }
 .rec-item.active { border-color: #1c5bb8; box-shadow: 0 0 0 1px #1c5bb8 inset; }
 .help-body { white-space: pre-wrap; max-width: 300px; line-height: 1.7; }
 .demo-ops { border: 1px dashed #cdd2da; border-radius: 4px; padding: 10px 12px; background: #fafbfc; }
+
+/* 证书核验详情弹层 */
+.verify-pop { width: 268px; line-height: 1.8; }
+.verify-pop-title { font-weight: 600; color: #1f2329; margin-bottom: 6px; }
+.verify-row { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
+.verify-k { color: #8a919f; }

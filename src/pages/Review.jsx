@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Alert, Button, Card, Checkbox, Descriptions, Space, Typography } from 'antd'
+import { Alert, Button, Card, Checkbox, Descriptions, Space, Table, Tag, Typography } from 'antd'
 import { CloseCircleFilled, ExclamationCircleFilled } from '@ant-design/icons'
-import { applicant } from '../data.js'
+import { applicant, verifyRows, VERIFY_TEXT } from '../data.js'
 import { yearsSince } from '../checks.js'
 
 const { Text } = Typography
@@ -55,6 +55,35 @@ export default function Review({ form, issues, go, app, onSubmit }) {
           <IssueList items={warnings} level="warning" go={go} />
         </Card>
       )}
+
+      <Card title="材料核验结果" style={{ marginBottom: 16 }}>
+        <Table
+          size="small" pagination={false} rowKey="key" dataSource={verifyRows(form)}
+          columns={[
+            { title: '材料名称', dataIndex: 'material', width: 300 },
+            { title: '核验渠道', dataIndex: 'channel', width: 220 },
+            { title: '核验时间', dataIndex: 'time', width: 150 },
+            {
+              title: '核验结果', dataIndex: 'status', width: 230,
+              render: (v, r) => (
+                <Space direction="vertical" size={2}>
+                  {v === 'verified'
+                    ? <Tag color="success" style={{ marginInlineEnd: 0 }}>核验通过</Tag>
+                    : <Tag style={{ marginInlineEnd: 0 }}>{VERIFY_TEXT[v] || VERIFY_TEXT.none}</Tag>}
+                  {v === 'verified' && r.items.length > 0 && (
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {r.items.map((it) => `${it.label}${it.result}`).join('，')}
+                    </Text>
+                  )}
+                </Space>
+              ),
+            },
+          ]}
+        />
+        <div className="policy-ref" style={{ marginTop: 12 }}>
+          演示环境中核验结果为示例数据，正式环境对接官方查询渠道。
+        </div>
+      </Card>
 
       <Card title="核对申报信息" style={{ marginBottom: 16 }}>
         <Descriptions column={2} size="small" bordered labelStyle={{ width: 140 }}>

@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
-  Alert, App as AntApp, Button, Card, Col, DatePicker, Descriptions, Dropdown, Form, Input, InputNumber,
-  Popover, Radio, Row, Select, Space, Table, Tag, Typography,
+  Alert, App as AntApp, Button, Card, Col, DatePicker, Descriptions, Form, Input, InputNumber,
+  Popconfirm, Popover, Radio, Row, Select, Space, Table, Tag, Typography,
 } from 'antd'
 import {
-  CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, FileTextOutlined, PaperClipOutlined,
-  QuestionCircleOutlined, UploadOutlined, UserOutlined,
+  CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, PaperClipOutlined,
+  PlusOutlined, QuestionCircleOutlined, UploadOutlined, UserOutlined,
 } from '@ant-design/icons'
 import dayjs from 'dayjs'
-import { applicant, sections, guides, tips, fieldHelp, breakRules } from '../data.js'
+import { applicant, sections, guides, tips, fieldHelp, breakRules, VERIFY_TEXT } from '../data.js'
 import { sectionStatus, yearsSince } from '../checks.js'
 import { STATUS } from '../status.js'
 
@@ -40,6 +40,62 @@ function Help({ k }) {
   )
 }
 
+
+// 核验详情：渠道、时间、结果、逐项比对。演示环境为示例数据
+function VerifyDetail({ v, title }) {
+  if (!v) return null
+  const rows = [
+    ['核验渠道', v.channel || '—'],
+    ['核验时间', v.time || '—'],
+    ['核验结果', VERIFY_TEXT[v.status] || VERIFY_TEXT.none],
+  ]
+  return (
+    <div className="verify-pop">
+      <div className="verify-pop-title">{title}</div>
+      {rows.map(([k, val]) => (
+        <div className="verify-row" key={k}>
+          <span className="verify-k">{k}</span>
+          <span>{val}</span>
+        </div>
+      ))}
+      {v.items && v.items.length > 0 && (
+        <>
+          <div className="verify-k" style={{ marginTop: 8 }}>比对结果</div>
+          {v.items.map((it) => (
+            <div className="verify-row" key={it.label}>
+              <span className="verify-k">{it.label}</span>
+              <span style={{ color: it.result === '一致' ? '#2e9d5b' : '#d4380d' }}>{it.result}</span>
+            </div>
+          ))}
+        </>
+      )}
+      {v.note && <div style={{ marginTop: 8, color: '#5c6370' }}>{v.note}</div>}
+      <div className="policy-ref" style={{ marginTop: 10 }}>
+        演示环境中核验结果为示例数据，正式环境对接官方查询渠道。
+      </div>
+    </div>
+  )
+}
+
+function VerifyTag({ v, title }) {
+  const status = v?.status || 'none'
+  if (status === 'verified') {
+    return (
+      <Popover trigger="click" placement="left" content={<VerifyDetail v={v} title={title} />}>
+        <Tag color="success" style={{ cursor: 'pointer', marginInlineEnd: 0 }}>联网核验通过</Tag>
+      </Popover>
+    )
+  }
+  if (status === 'manual' && v) {
+    return (
+      <Popover trigger="click" placement="left" content={<VerifyDetail v={v} title={title} />}>
+        <Tag style={{ cursor: 'pointer', marginInlineEnd: 0 }}>需人工核对原件</Tag>
+      </Popover>
+    )
+  }
+  return <Tag style={{ marginInlineEnd: 0 }}>待人工核对</Tag>
+}
+
 const Tip = ({ k }) => <div className="tip">{tips[k]}</div>
 
 function fieldIssue(issues, field) {
@@ -66,6 +122,20 @@ export default function ApplyForm({ form, setForm, issues, go, focusSection, app
   const updateRow = (list, key, field, value) => {
     setForm((f) => ({ ...f, [list]: f[list].map((r) => (r.key === key ? { ...r, [field]: value } : r)) }))
   }
+  // 新增行的 key 由时间戳加自增序号生成，不使用数组下标
+  const seq = useRef(0)
+  const newKey = (prefix) => `${prefix}-${Date.now()}-${(seq.current += 1)}`
+  const addRow = (list, row) => setForm((f) => ({ ...f, [list]: [...f[list], row] }))
+  const removeRow = (list, key) => setForm((f) => ({ ...f, [list]: f[list].filter((r) => r.key !== key) }))
+  const deleteCol = (list, label) => ({
+    title: '操作', width: 56, align: 'center',
+    render: (_, r) => (
+      <Popconfirm title={`确认删除这条${label}？`} okText="删除" cancelText="取消" okButtonProps={{ danger: true }}
+        onConfirm={() => removeRow(list, r.key)}>
+        <a style={{ color: '#d4380d' }}>删除</a>
+      </Popconfirm>
+    ),
+  })
 
   const scrollTo = (key) => {
     setActive(key)
@@ -120,9 +190,17 @@ export default function ApplyForm({ form, setForm, issues, go, focusSection, app
     message.success(`已上传：${a.name}`)
   }
 
+  const removeFile = (a) => {
+    setForm((f) => ({
+      ...f,
+      attachments: f.attachments.map((x) => (x.key === a.key ? { ...x, file: null } : x)),
+    }))
+    message.success(`已删除：${a.name}`)
+  }
+
   return (
     <>
-      <div className="page-title-row">
+      <div className="page-title-row is-sticky">
         <Space align="center">
           <h1 className="page-title">2026年度职称申报表</h1>
           <Tag color={st.color}>{st.text}</Tag>
@@ -130,11 +208,6 @@ export default function ApplyForm({ form, setForm, issues, go, focusSection, app
         {!readOnly && (
           <Space size={12}>
             <span className="save-note">内容将自动保存 · 最近保存 15:36</span>
-            <Dropdown
-              menu={{ items: [{ key: 'd', icon: <FileTextOutlined />, label: '2026年度职称申报表（本草稿）· 15:36' }] }}
-            >
-              <Button icon={<FileTextOutlined />}>草稿箱（1）</Button>
-            </Dropdown>
             <Button onClick={() => message.success('草稿已保存')}>保存草稿</Button>
             <Button type="primary" onClick={() => go('review')}>提交前检查</Button>
           </Space>
@@ -289,7 +362,12 @@ export default function ApplyForm({ form, setForm, issues, go, focusSection, app
           </Card>
 
           <Card {...sectionProps('education', '学历学位',
-            form.education.verified && <Tag color="success">学信网核验通过</Tag>)}>
+            form.education.verified && (
+              <Popover trigger="click" placement="bottomRight"
+                content={<VerifyDetail v={form.education.verify} title={`学历证书（${form.education.degree}）`} />}>
+                <Tag color="success" style={{ cursor: 'pointer', marginInlineEnd: 0 }}>学信网核验通过</Tag>
+              </Popover>
+            ))}>
             <Tip k="education" />
             <Row gutter={16}>
               <Col span={8}>
@@ -363,61 +441,125 @@ export default function ApplyForm({ form, setForm, issues, go, focusSection, app
               size="small" pagination={false} rowKey="key" dataSource={form.certs}
               columns={[
                 {
-                  title: '证书', dataIndex: 'name',
-                  render: (v, r) => (
-                    <Space direction="vertical" size={0}>
-                      <Text>{v}</Text>
-                      <Text type="secondary" style={{ fontSize: 12 }}>{r.issuer} · {r.date}</Text>
-                    </Space>
-                  ),
-                },
-                {
-                  title: '证书编号', dataIndex: 'no', width: 230,
+                  title: '证书名称 / 证书编号', dataIndex: 'name',
                   render: (v, r, i) => {
                     const it = fieldIssue(issues, `certs.${i}.no`)
                     return (
-                      <Form.Item style={{ margin: 0 }} validateStatus={it ? 'error' : undefined}
-                        help={it ? `当前 ${v.length} 位，应为 10–18 位` : undefined}>
-                        <Input value={v} onChange={(e) => updateRow('certs', r.key, 'no', e.target.value)} />
-                      </Form.Item>
+                      <Space direction="vertical" size={6} style={{ width: '100%' }}>
+                        <Input placeholder="证书名称" value={v}
+                          onChange={(e) => updateRow('certs', r.key, 'name', e.target.value)} />
+                        <Form.Item style={{ margin: 0 }} validateStatus={it ? 'error' : undefined}
+                          help={it ? `当前 ${(r.no || '').trim().length} 位，应为 10–18 位` : undefined}>
+                          <Input placeholder="证书编号（10–18 位字母或数字）" value={r.no}
+                            onChange={(e) => updateRow('certs', r.key, 'no', e.target.value)} />
+                        </Form.Item>
+                      </Space>
                     )
                   },
                 },
                 {
-                  title: '核验', dataIndex: 'status', width: 110,
-                  render: (s) => s === 'verified'
-                    ? <Tag color="success">联网核验通过</Tag>
-                    : <Tag>待人工核验</Tag>,
+                  title: '发证机关 / 发证日期', dataIndex: 'issuer', width: 190,
+                  render: (v, r) => (
+                    <Space direction="vertical" size={6} style={{ width: '100%' }}>
+                      <Input placeholder="发证机关" value={v}
+                        onChange={(e) => updateRow('certs', r.key, 'issuer', e.target.value)} />
+                      <DatePicker style={{ width: '100%' }} placeholder="发证日期"
+                        value={r.date ? dayjs(r.date) : null}
+                        onChange={(x) => updateRow('certs', r.key, 'date', x ? x.format('YYYY-MM-DD') : '')} />
+                    </Space>
+                  ),
                 },
+                {
+                  title: '核验', dataIndex: 'status', width: 118, align: 'center',
+                  render: (_, r) => <VerifyTag v={r.verify} title={r.name || '职业资格证书'} />,
+                },
+                ...(readOnly ? [] : [deleteCol('certs', '证书')]),
               ]}
             />
+            {!readOnly && (
+              <Button size="small" icon={<PlusOutlined />} style={{ marginTop: 12 }}
+                onClick={() => addRow('certs', { key: newKey('c'), name: '', no: '', issuer: '', date: '', status: 'manual' })}>
+                添加证书
+              </Button>
+            )}
           </Card>
 
           <Card {...sectionProps('achievement', '工作业绩')}>
             <Tip k="achievement" />
-            <Form.Item label="任现职以来的主要业绩" {...itemStatus('achievement')}>
-              <Input.TextArea rows={5} maxLength={1500} value={form.achievement}
+            <Form.Item label="任现职以来的主要业绩" className="count-field" {...itemStatus('achievement')}>
+              <Input.TextArea rows={5} maxLength={1500} showCount value={form.achievement}
                 onChange={(e) => update(['achievement'], e.target.value)} />
             </Form.Item>
             <Text strong style={{ display: 'block', margin: '8px 0' }}>主持或参与的项目</Text>
             <Table size="small" pagination={false} rowKey="key" dataSource={form.projects}
               columns={[
-                { title: '项目名称', dataIndex: 'name' },
-                { title: '本人角色', dataIndex: 'role', width: 120 },
-                { title: '起止时间', dataIndex: 'period', width: 190 },
+                {
+                  title: '项目名称', dataIndex: 'name',
+                  render: (v, r) => (
+                    <Input placeholder="项目名称" value={v}
+                      onChange={(e) => updateRow('projects', r.key, 'name', e.target.value)} />
+                  ),
+                },
+                {
+                  title: '本人角色', dataIndex: 'role', width: 130,
+                  render: (v, r) => (
+                    <Input placeholder="如：负责人" value={v}
+                      onChange={(e) => updateRow('projects', r.key, 'role', e.target.value)} />
+                  ),
+                },
+                {
+                  title: '起止时间', dataIndex: 'period', width: 190,
+                  render: (v, r) => (
+                    <Input placeholder="如：2022-03 至 2023-06" value={v}
+                      onChange={(e) => updateRow('projects', r.key, 'period', e.target.value)} />
+                  ),
+                },
+                ...(readOnly ? [] : [deleteCol('projects', '项目')]),
               ]} />
+            {!readOnly && (
+              <Button size="small" icon={<PlusOutlined />} style={{ marginTop: 12 }}
+                onClick={() => addRow('projects', { key: newKey('p'), name: '', role: '', period: '' })}>
+                添加项目
+              </Button>
+            )}
           </Card>
 
           <Card {...sectionProps('awards', '获奖情况', <Text type="secondary">选填</Text>)}>
             <Tip k="awards" />
             <Table size="small" pagination={false} rowKey="key" dataSource={form.awards}
               columns={[
-                { title: '奖项名称', dataIndex: 'name' },
-                { title: '级别', dataIndex: 'level', width: 80 },
-                { title: '等级', dataIndex: 'grade', width: 80 },
-                { title: '年度', dataIndex: 'year', width: 64 },
                 {
-                  title: '本人排名', dataIndex: 'rank', width: 160,
+                  title: '奖项名称', dataIndex: 'name',
+                  render: (v, r) => (
+                    <Input placeholder="奖项名称" value={v}
+                      onChange={(e) => updateRow('awards', r.key, 'name', e.target.value)} />
+                  ),
+                },
+                {
+                  title: '级别', dataIndex: 'level', width: 96,
+                  render: (v, r) => (
+                    <Select style={{ width: '100%' }} placeholder="级别" value={v || undefined}
+                      onChange={(x) => updateRow('awards', r.key, 'level', x)}
+                      options={['企业级', '市级', '省部级', '国家级'].map((o) => ({ value: o }))} />
+                  ),
+                },
+                {
+                  title: '等级', dataIndex: 'grade', width: 84,
+                  render: (v, r) => (
+                    <Input placeholder="如：一等奖" value={v}
+                      onChange={(e) => updateRow('awards', r.key, 'grade', e.target.value)} />
+                  ),
+                },
+                {
+                  title: '年度', dataIndex: 'year', width: 84,
+                  render: (v, r) => (
+                    <DatePicker picker="year" style={{ width: '100%' }} placeholder="年度"
+                      value={v ? dayjs(String(v), 'YYYY') : null}
+                      onChange={(x) => updateRow('awards', r.key, 'year', x ? x.format('YYYY') : '')} />
+                  ),
+                },
+                {
+                  title: '本人排名', dataIndex: 'rank', width: 122,
                   render: (v, r) => {
                     const it = fieldIssue(issues, `awards.${r.key}.rank`)
                     return (
@@ -428,7 +570,14 @@ export default function ApplyForm({ form, setForm, issues, go, focusSection, app
                     )
                   },
                 },
+                ...(readOnly ? [] : [deleteCol('awards', '奖项')]),
               ]} />
+            {!readOnly && (
+              <Button size="small" icon={<PlusOutlined />} style={{ marginTop: 12 }}
+                onClick={() => addRow('awards', { key: newKey('a'), name: '', level: '企业级', grade: '', year: '', rank: '' })}>
+                添加奖项
+              </Button>
+            )}
           </Card>
 
           <Card {...sectionProps('training', '继续教育', <Text type="secondary">每年不少于 90 学时</Text>)}>
@@ -466,6 +615,12 @@ export default function ApplyForm({ form, setForm, issues, go, focusSection, app
                   <Space>
                     <PaperClipOutlined className="muted" />
                     <a>{a.file}</a>
+                    {!readOnly && (
+                      <Popconfirm title={`确认删除“${a.name}”？`} okText="删除" cancelText="取消"
+                        okButtonProps={{ danger: true }} onConfirm={() => removeFile(a)}>
+                        <a style={{ color: '#d4380d' }}>删除</a>
+                      </Popconfirm>
+                    )}
                   </Space>
                 ) : (
                   <Space>
