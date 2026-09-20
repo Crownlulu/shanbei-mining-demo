@@ -340,6 +340,20 @@
     return null;
   }
 
+  // ---------- 写入：模拟真实用户输入 ----------
+  // 直接 el.value = x 不会触发任何事件，宿主系统与本插件的校验都不会响应。
+  // 这里补发 input 与 change 事件，使写入与用户手动输入等价。
+  function setValue(el, v) {
+    if (!el) return;
+    var proto = el.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype
+              : el.tagName === 'SELECT' ? window.HTMLSelectElement.prototype
+              : window.HTMLInputElement.prototype;
+    var setter = Object.getOwnPropertyDescriptor(proto, 'value');
+    if (setter && setter.set) { setter.set.call(el, v); } else { el.value = v; }
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
   // ---------- 校验 ----------
   var issues = [];
 
@@ -488,10 +502,10 @@
           if (!activeEl || !activeInfo.example) return;
           if (activeEl.tagName === 'SELECT') {
             Array.prototype.forEach.call(activeEl.options, function (o) {
-              if (o.text.indexOf(activeInfo.example) === 0) activeEl.value = o.value;
+              if (o.text.indexOf(activeInfo.example) === 0) setValue(activeEl, o.value);
             });
           } else {
-            activeEl.value = activeInfo.example;
+            setValue(activeEl, activeInfo.example);
           }
           activeEl.focus();
           fillBtn.textContent = '已填入';
@@ -586,7 +600,7 @@
         return;
       }
       var item = plan[i];
-      item.el.value = item.value;
+      setValue(item.el, item.value);
       flash(item.el);
       if (i === 0 || i === plan.length - 1) item.el.scrollIntoView({ block: 'center', behavior: 'smooth' });
       log.insertAdjacentHTML('afterbegin',
