@@ -1,0 +1,126 @@
+/* 模拟：某单位现有职称评审系统（老系统样式） */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #d6e3f0;
+  font-family: "SimSun", "宋体", "Microsoft YaHei", serif;
+  font-size: 12px;
+  color: #000;
+}
+a { color: #00c; }
+
+.topbar {
+  background: linear-gradient(to bottom, #2f5c99, #1f4373);
+  color: #fff;
+  padding: 6px 12px;
+  border-bottom: 2px solid #12304f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.topbar .sys-name { font-size: 15px; font-weight: bold; letter-spacing: 1px; }
+.topbar .user { font-size: 12px; }
+.topbar .user a { color: #cde3ff; }
+
+.navbar {
+  background: #eef3f9;
+  border-bottom: 1px solid #a8bdd4;
+  padding: 0 12px;
+}
+.navbar ul { list-style: none; margin: 0; padding: 0; display: flex; }
+.navbar li {
+  padding: 5px 14px;
+  border-right: 1px solid #c8d6e5;
+  cursor: pointer;
+}
+.navbar li.on { background: #fff; font-weight: bold; border-bottom: 2px solid #1f4373; }
+
+.wrap {
+  max-width: 1000px;
+  margin: 10px auto 40px;
+  background: #fff;
+  border: 1px solid #9bb2ca;
+  padding: 0;
+}
+
+.crumb {
+  background: #f5f7fa;
+  border-bottom: 1px solid #d5dfe9;
+  padding: 5px 10px;
+  color: #444;
+}
+
+.page-head {
+  text-align: center;
+  padding: 14px 0 6px;
+}
+.page-head h1 {
+  margin: 0;
+  font-size: 18px;
+  font-family: "SimHei", "黑体", serif;
+  letter-spacing: 3px;
+}
+.page-head .sub { color: #666; margin-top: 4px; }
+
+.sec-title {
+  background: #e8eef5;
+  border-top: 1px solid #b9cadb;
+  border-bottom: 1px solid #b9cadb;
+  padding: 4px 10px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+table.form {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+table.form th, table.form td {
+  border: 1px solid #b9cadb;
+  padding: 4px 6px;
+  vertical-align: middle;
+}
+table.form th {
+  background: #f2f6fa;
+  text-align: right;
+  font-weight: normal;
+  width: 110px;
+  white-space: nowrap;
+}
+table.form td { background: #fff; }
+
+input[type=text], select, textarea {
+  font-family: inherit;
+  font-size: 12px;
+  border: 1px solid #7f9db9;
+  padding: 2px 3px;
+  background: #fff;
+}
+input[type=text] { width: 96%; }
+select { padding: 1px; }
+textarea { width: 99%; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: none; }
+
+table.grid { width: 100%; border-collapse: collapse; }
+table.grid th, table.grid td {
+  border: 1px solid #b9cadb;
+  padding: 3px 5px;
+}
+table.grid th { background: #f2f6fa; font-weight: normal; }
+
+.btnbar { padding: 14px; text-align: center; border-top: 1px solid #d5dfe9; margin-top: 12px; }
+button.win {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 3px 16px;
+  border: 1px solid #8a8a8a;
+  background: linear-gradient(to bottom, #fdfdfd, #e2e2e2);
+  cursor: pointer;
+  margin: 0 4px;
+}
+button.win:active { background: linear-gradient(to bottom, #d8d8d8, #f0f0f0); }
+
+.req { color: #c00; }
+.note { color: #777; padding: 6px 10px; }
+.footer { text-align: center; color: #667; padding: 10px; font-size: 11px; }

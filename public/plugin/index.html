@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>职称评审管理系统 - 专业技术职务任职资格申报表</title>
+<link rel="stylesheet" href="./legacy.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <div class="sys-name">××矿业有限公司　职称评审管理系统</div>
+  <div class="user">当前用户：王建军（采矿一队）　|　<a href="#">修改密码</a>　|　<a href="#">退出</a></div>
+</div>
+
+<div class="navbar">
+  <ul>
+    <li>首页</li>
+    <li class="on">职称申报</li>
+    <li>申报查询</li>
+    <li>通知公告</li>
+    <li>系统帮助</li>
+  </ul>
+</div>
+
+<div class="wrap">
+  <div class="crumb">当前位置：首页 &gt; 职称申报 &gt; 专业技术职务任职资格申报表</div>
+
+  <div class="page-head">
+    <h1>专业技术职务任职资格申报表</h1>
+    <div class="sub">（申报人填写，带 <span class="req">*</span> 为必填项）</div>
+  </div>
+
+  <form id="applyForm" onsubmit="return false;">
+
+  <div class="sec-title">一、基本信息</div>
+  <table class="form">
+    <tr>
+      <th><span class="req">*</span>姓名</th>
+      <td><input type="text" name="name" value="王建军" /></td>
+      <th><span class="req">*</span>性别</th>
+      <td><select name="gender"><option>男</option><option>女</option></select></td>
+      <th><span class="req">*</span>出生年月</th>
+      <td><input type="text" name="birth" value="1985-04" /></td>
+    </tr>
+    <tr>
+      <th><span class="req">*</span>身份证号</th>
+      <td><input type="text" name="idno" value="6101**********1234" /></td>
+      <th><span class="req">*</span>联系电话</th>
+      <td><input type="text" name="phone" value="138****5678" /></td>
+      <th>电子邮箱</th>
+      <td><input type="text" name="email" value="" /></td>
+    </tr>
+    <tr>
+      <th><span class="req">*</span>所在部门</th>
+      <td><input type="text" name="dept" value="采矿一队" /></td>
+      <th><span class="req">*</span>现任岗位</th>
+      <td><input type="text" name="post" value="技术主管" /></td>
+      <th><span class="req">*</span>政治面貌</th>
+      <td><select name="party"><option>中共党员</option><option>群众</option></select></td>
+    </tr>
+  </table>
+
+  <div class="sec-title">二、申报信息</div>
+  <table class="form">
+    <tr>
+      <th><span class="req">*</span>申报年度</th>
+      <td><select name="year"><option>2026</option></select></td>
+      <th><span class="req">*</span>申报级别</th>
+      <td><select name="level"><option>副高级</option><option>中级</option><option>正高级</option></select></td>
+      <th><span class="req">*</span>申报系列</th>
+      <td><select name="series"><option>工程系列</option><option>经济系列</option></select></td>
+    </tr>
+    <tr>
+      <th><span class="req">*</span>申报职称</th>
+      <td><input type="text" name="title" value="高级工程师" /></td>
+      <th><span class="req">*</span>现从事专业</th>
+      <td><input type="text" name="major" value="采矿工程" /></td>
+      <th><span class="req">*</span>专业工作年限</th>
+      <td><input type="text" name="proYears" value="14" /></td>
+    </tr>
+    <tr>
+      <th><span class="req">*</span>申报方式</th>
+      <td>
+        <select name="method">
+          <option>正常申报</option>
+          <option>破格申报</option>
+          <option>转评</option>
+        </select>
+      </td>
+      <th>破格依据</th>
+      <td colspan="3"><input type="text" name="breakRule" value="" placeholder="选择破格申报时填写" /></td>
+    </tr>
+    <tr>
+      <th><span class="req">*</span>申报单位</th>
+      <td><input type="text" name="unit" value="××矿业有限公司" /></td>
+      <th><span class="req">*</span>与单位关系</th>
+      <td><select name="relation"><option>劳动合同制</option><option>劳务派遣</option><option>人事代理</option></select></td>
+      <th><span class="req">*</span>参加工作时间</th>
+      <td><input type="text" name="workStart" value="2012-07" /></td>
+    </tr>
+  </table>
+
+  <div class="sec-title">三、学历学位</div>
+  <table class="form">
+    <tr>
+      <th><span class="req">*</span>最高学历</th>
+      <td><select name="degree"><option>大学本科</option><option>硕士研究生</option><option>大学专科</option></select></td>
+      <th><span class="req">*</span>毕业院校</th>
+      <td><input type="text" name="school" value="" /></td>
+      <th><span class="req">*</span>所学专业</th>
+      <td><input type="text" name="eduMajor" value="" /></td>
+    </tr>
+    <tr>
+      <th><span class="req">*</span>毕业时间</th>
+      <td><input type="text" name="graduate" value="" /></td>
+      <th><span class="req">*</span>学位</th>
+      <td><input type="text" name="degreeName" value="" /></td>
+      <th><span class="req">*</span>学历证书编号</th>
+      <td><input type="text" name="eduCertNo" value="" /></td>
+    </tr>
+  </table>
+
+  <div class="sec-title">四、现任职称</div>
+  <table class="form">
+    <tr>
+      <th><span class="req">*</span>现有职称名称</th>
+      <td><input type="text" name="curTitle" value="" /></td>
+      <th><span class="req">*</span>取得时间</th>
+      <td><input type="text" name="obtained" value="" /></td>
+      <th><span class="req">*</span>聘任时间</th>
+      <td><input type="text" name="hired" value="" /></td>
+    </tr>
+    <tr>
+      <th><span class="req">*</span>证书编号</th>
+      <td colspan="5"><input type="text" name="titleCertNo" value="" style="width:40%" /></td>
+    </tr>
+  </table>
+
+  <div class="sec-title">五、职业资格证书</div>
+  <table class="grid" id="certGrid">
+    <tr><th style="width:30px">序号</th><th>证书名称</th><th style="width:180px">发证机关</th><th style="width:90px">发证日期</th><th style="width:170px">证书编号</th></tr>
+    <tr><td align="center">1</td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td></tr>
+    <tr><td align="center">2</td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td></tr>
+  </table>
+
+  <div class="sec-title">六、主要工作业绩</div>
+  <div class="note">请填写任现职以来的主要工作业绩（不超过1500字）</div>
+  <table class="form">
+    <tr><td style="padding:6px"><textarea name="achievement" rows="7"></textarea></td></tr>
+  </table>
+
+  <div class="sec-title">七、获奖情况</div>
+  <table class="grid" id="awardGrid">
+    <tr><th style="width:30px">序号</th><th>奖项名称</th><th style="width:100px">奖励级别</th><th style="width:90px">等次</th><th style="width:70px">年度</th><th style="width:120px">本人排名</th></tr>
+    <tr><td align="center">1</td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td></tr>
+    <tr><td align="center">2</td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td></tr>
+  </table>
+
+  <div class="sec-title">八、继续教育</div>
+  <table class="grid" id="trainGrid">
+    <tr><th style="width:30px">序号</th><th style="width:120px">年度</th><th>培训项目</th><th style="width:120px">学时</th></tr>
+    <tr><td align="center">1</td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td></tr>
+    <tr><td align="center">2</td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td></tr>
+    <tr><td align="center">3</td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td><td><input type="text" style="width:99%" value="" /></td></tr>
+  </table>
+
+  <div class="sec-title">九、附件材料</div>
+  <table class="grid">
+    <tr><th style="width:30px">序号</th><th>材料名称</th><th style="width:90px">是否必传</th><th style="width:220px">上传</th></tr>
+    <tr><td align="center">1</td><td>学历学位证书扫描件</td><td align="center">是</td><td><input type="file" /></td></tr>
+    <tr><td align="center">2</td><td>现职称证书扫描件</td><td align="center">是</td><td><input type="file" /></td></tr>
+    <tr><td align="center">3</td><td>聘任文件</td><td align="center">是</td><td><input type="file" /></td></tr>
+    <tr><td align="center">4</td><td>继续教育学时证明</td><td align="center">是</td><td><input type="file" /></td></tr>
+    <tr><td align="center">5</td><td>业绩证明材料</td><td align="center">是</td><td><input type="file" /></td></tr>
+  </table>
+
+  <div class="btnbar">
+    <button class="win" type="button">保存</button>
+    <button class="win" type="button">提交审核</button>
+    <button class="win" type="button">打印预览</button>
+    <button class="win" type="button">返回</button>
+  </div>
+
+  </form>
+</div>
+
+<div class="footer">
+  ××矿业有限公司人力资源部　技术支持：信息中心　建议使用 IE9 及以上版本浏览器，分辨率 1024×768
+</div>
+
+<script src="./guide-data.js"></script>
+<script src="./rules.js"></script>
+<script src="./hr-data.js"></script>
+<script src="./plugin.js"></script>
+</body>
+</html>
